@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PlayLens</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-screen="welcome">
+
+  <!-- reusable SVG icon symbols -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></symbol>
+    <symbol id="i-summary" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></symbol>
+    <symbol id="i-saved" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v16l-7-4-7 4V4a1 1 0 0 1 1-1Z"/></symbol>
+    <symbol id="i-explore" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 6-4 2 2-6 4-2Z"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4.5 1.5c0 1.5-2 2-2 3.5"/><path d="M12 17h.01"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2l-.4-2.6H8.9l-.4 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 4 12a7 7 0 0 0 .1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2l.4 2.6h4.2l.4-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6A7 7 0 0 0 19 12Z"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></symbol>
+    <symbol id="i-watch" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-chevron-d" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-child" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.2"/><path d="M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/></symbol>
+    <symbol id="i-move" viewBox="0 0 24 24"><path d="M5 9V5h4M19 9V5h-4M5 15v4h4M19 15v4h-4"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 21V4M4 4h13l-2 4 2 4H4"/></symbol>
+    <symbol id="i-skip" viewBox="0 0 24 24"><path d="m6 4 10 8-10 8V4Z"/><path d="M18 4v16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8L7 4Z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 4v16M17 4v16"/></symbol>
+    <symbol id="i-motion" viewBox="0 0 24 24"><path d="M4 12h5l2-6 4 12 2-6h3"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path d="M4 7V5h16v2M9 5v14M7 19h4"/><path d="M14 12v-1h6v1M17 11v8M15.5 19h3"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></symbol>
+    <symbol id="i-swing" viewBox="0 0 24 24"><path d="M4 4h16M8 4l-1 9M16 4l1 9M7 13h10M12 13v5M10 20h4"/></symbol>
+    <symbol id="i-climber" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4v16M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+    <symbol id="i-ground" viewBox="0 0 24 24"><path d="M3 18h18M6 18l1.5-3M11 18l1.5-3M16 18l1.5-3M4.5 14l1-2M9.5 14l1-2M14.5 14l1-2M19.5 14l-1-2"/></symbol>
+    <symbol id="i-bench" viewBox="0 0 24 24"><path d="M3 10h18M4 10v8M20 10v8M6 14h12M5 10V8h14v2"/></symbol>
+    <symbol id="i-slide" viewBox="0 0 24 24"><path d="M4 20c6 0 10-4 10-10V5M14 10h5M9 20h11"/></symbol>
+  </defs></svg>
+
+  <div class="stage">
+    <div class="device-scaler" id="deviceScaler">
+      <div class="device" id="device">
+        <div class="notch"></div>
+        <div class="viewport" id="viewport">
+
+          <!-- WELCOME -->
+          <section class="screen" data-name="welcome">
+            <div class="top-inset"></div>
+            <div class="pad" style="flex:1; display:flex; flex-direction:column;">
+              <div style="flex:.55"></div>
+              <div class="welcome-mark" aria-hidden="true">
+                <svg width="48" height="48" viewBox="0 0 46 46" fill="none">
+                  <circle cx="23" cy="23" r="21.5" stroke="#7257D9" stroke-width="1.4"/>
+                  <circle cx="23" cy="23" r="13.5" stroke="#7257D9" stroke-width="1.4" stroke-dasharray="2.4 5"/>
+                  <circle cx="23" cy="23" r="3.4" fill="#7257D9"/>
+                </svg>
+              </div>
+              <p class="h-eyebrow" style="margin-top:22px;">For caregivers</p>
+              <h1 class="h1">Every playground,<br>made for your<br>child.</h1>
+              <p class="body-text" style="max-width:300px;">PlayLens reads the playground in front of you and shows what works for your child, and where to stay close. You're always in charge.</p>
+              <div style="flex:1"></div>
+            </div>
+            <div class="pad" style="padding-bottom:34px;">
+              <button class="btn btn-primary btn-block" data-go="onboarding">Get started</button>
+              <p class="small-text" style="text-align:center; margin-top:12px;">Understand any playground in minutes</p>
+            </div>
+          </section>
+
+          <!-- ONBOARDING -->
+          <section class="screen" data-name="onboarding">
+            <div class="scr-head">
+              <button class="icon-btn" id="onbBack" aria-label="Back"><svg class="ic ic-sm"><use href="#i-back"/></svg></button>
+              <div style="flex:1"></div>
+              <button class="text-btn" id="onbSkip">Skip</button>
+            </div>
+            <div class="onb-stage">
+              <div class="onb-art" id="onbArt"></div>
+            </div>
+            <div class="pad onb-copy">
+              <h2 class="h2" id="onbTitle"></h2>
+              <p class="body-text" id="onbText"></p>
+            </div>
+            <div class="pad" style="padding-bottom:30px;">
+              <div class="progress-dots" id="onbDots" style="justify-content:center; margin-bottom:18px;"></div>
+              <button class="btn btn-primary btn-block" id="onbNext">Next</button>
+            </div>
+          </section>
+
+          <!-- CHILD PROFILE (consolidated: 4 steps + summary) -->
+          <section class="screen" data-name="profile">
+            <div class="scr-head">
+              <button class="icon-btn" id="profileBack" aria-label="Back"><svg class="ic ic-sm"><use href="#i-back"/></svg></button>
+              <div style="flex:1"></div>
+              <div class="progress-dots" id="profileDots"></div>
+              <div style="flex:1"></div>
+              <div style="width:38px"></div>
+            </div>
+
+            <div class="pad profile-body" id="profileSteps" style="flex:1; position:relative; overflow:auto; padding-top:14px;">
+
+              <!-- step 0: DIAGNOSIS FIRST -->
+              <div class="p-step" data-step="0">
+                <p class="h-eyebrow">Step 1 of 4</p>
+                <h2 class="h2">A little about your child</h2>
+                <p class="body-text" style="margin-bottom:26px;">This helps PlayLens tailor what it looks for. It stays private on your device.</p>
+
+                <div class="profile-group">
+                  <p class="profile-group-label">Who are we planning for?</p>
+                  <label class="field-label">Name or nickname <span class="optional-tag">optional</span></label>
+                  <input class="field-input" id="childName" type="text" placeholder="e.g. Maya">
+                  <label class="field-label" style="margin-top:14px;">Health &amp; diagnosis <span class="optional-tag">optional</span></label>
+                  <p class="field-hint">Optional context that can help PlayLens read the environment more accurately.</p>
+                  <button class="dropdown-trigger" id="diagTrigger" type="button">
+                    <span id="diagTriggerText">Select any that apply</span>
+                    <svg class="ic ic-sm"><use href="#i-chevron-d"/></svg>
+                  </button>
+                  <div class="dropdown-panel" id="diagPanel" hidden>
+                    <input class="dropdown-search" id="diagSearch" type="text" placeholder="Search…">
+                    <div class="dropdown-list" id="diagList"></div>
+                  </div>
+                  <div class="selected-tags" id="selectedTags"></div>
+                </div>
+
+                <div class="profile-group">
+                  <p class="profile-group-label">What should PlayLens keep in mind?</p>
+                  <p class="field-hint" style="margin-top:-6px;">This is what PlayLens actually uses to understand how your child experiences a space.</p>
+                  <label class="field-label">How they experience play <span class="optional-tag">optional</span></label>
+                  <button class="dropdown-trigger" id="ctxTrigger" type="button">
+                    <span id="ctxTriggerText">Choose anything that helps</span>
+                    <svg class="ic ic-sm"><use href="#i-chevron-d"/></svg>
+                  </button>
+                  <div class="dropdown-panel" id="ctxPanel" hidden>
+                    <input class="dropdown-search" id="ctxSearch" type="text" placeholder="Search…">
+                    <div class="dropdown-list" id="ctxList"></div>
+                  </div>
+                  <div class="selected-tags" id="ctxSelectedTags"></div>
+                  <label class="field-label" style="margin-top:14px;">Notes <span class="optional-tag">optional</span></label>
+                  <textarea class="field-input field-textarea" id="childNotes" rows="2" placeholder="e.g. Loves swinging. Needs a heads-up before moving on."></textarea>
+                </div>
+              </div>
+
+              <!-- step 1: AGE + MOVEMENT -->
+              <div class="p-step" data-step="1" hidden>
+                <p class="h-eyebrow">Step 2 of 4</p>
+                <h2 class="h2">Age &amp; getting around</h2>
+                <label class="field-label" style="margin-top:6px;">How old is she?</label>
+                <div class="option-row" data-group="age">
+                  <button class="opt-pill" data-value="3&ndash;5">3&ndash;5</button>
+                  <button class="opt-pill" data-value="6&ndash;8">6&ndash;8</button>
+                  <button class="opt-pill" data-value="9&ndash;12">9&ndash;12</button>
+                </div>
+                <label class="field-label" style="margin-top:18px;">How does she move around?</label>
+                <div class="option-list" data-group="movement">
+                  <button class="opt-card" data-value="independent"><span class="opt-title">On her own</span></button>
+                  <button class="opt-card" data-value="occasional"><span class="opt-title">Sometimes needs a hand</span></button>
+                  <button class="opt-card" data-value="aid"><span class="opt-title">Uses a mobility aid</span></button>
+                </div>
+              </div>
+
+              <!-- step 2: SENSORY + SUPPORT -->
+              <div class="p-step" data-step="2" hidden>
+                <p class="h-eyebrow">Step 3 of 4</p>
+                <h2 class="h2">Comfort &amp; support</h2>
+                <label class="field-label" style="margin-top:6px;">What suits her best?</label>
+                <div class="option-list" data-group="sensory">
+                  <button class="opt-card" data-value="sensitive"><span class="opt-title">Calmer is better</span></button>
+                  <button class="opt-card" data-value="quiet"><span class="opt-title">Prefers quiet corners</span></button>
+                  <button class="opt-card" data-value="seeking"><span class="opt-title">Loves busy &amp; active</span></button>
+                  <button class="opt-card" data-value="none"><span class="opt-title">No strong preference</span></button>
+                </div>
+                <label class="field-label" style="margin-top:18px;">How near do you usually stay?</label>
+                <div class="option-list" data-group="support">
+                  <button class="opt-card" data-value="minimal"><span class="opt-title">Watch from nearby</span></button>
+                  <button class="opt-card" data-value="occasional"><span class="opt-title">Close by, step in sometimes</span></button>
+                  <button class="opt-card" data-value="close"><span class="opt-title">Within reach most of the time</span></button>
+                </div>
+              </div>
+
+              <!-- step 3: COMMUNICATION -->
+              <div class="p-step" data-step="3" hidden>
+                <p class="h-eyebrow">Step 4 of 4</p>
+                <h2 class="h2">How does your child communicate?</h2>
+                <p class="body-text" style="margin-bottom:16px;">This helps PlayLens word its suggestions in a way that works for them.</p>
+                <div class="option-list" data-group="communication">
+                  <button class="opt-card" data-value="verbal"><span class="opt-title">Talks with words</span></button>
+                  <button class="opt-card" data-value="limited"><span class="opt-title">A few words</span></button>
+                  <button class="opt-card" data-value="visual"><span class="opt-title">Signs, cards or a device</span></button>
+                  <button class="opt-card" data-value="other"><span class="opt-title">Another way</span></button>
+                </div>
+              </div>
+
+              <!-- step 4: summary -->
+              <div class="p-step" data-step="4" hidden>
+                <p class="h-eyebrow">Ready</p>
+                <h2 class="h2" style="margin-bottom:14px;">Here's what I'll keep in mind</h2>
+                <div class="summary-head">
+                  <div class="summary-avatar" id="summaryAvatar">M</div>
+                  <div>
+                    <h2 class="h2" id="summaryName" style="margin-bottom:2px; font-size:20px;">Maya</h2>
+                    <p class="small-text" id="summaryAge">Age 6&ndash;8</p>
+                  </div>
+                </div>
+                <div class="summary-grid" id="summaryGrid"></div>
+                <div id="summaryTagsWrap" class="summary-tags-wrap" hidden>
+                  <div class="tag-wrap" id="summaryTags" style="margin-top:6px;"></div>
+                </div>
+                <div class="summary-promise">
+                  <svg class="ic ic-sm"><use href="#i-scan"/></svg>
+                  <p id="summaryPromise">I'll use these when I read the playground.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pad" style="padding:14px 22px 26px; display:flex; gap:10px; box-shadow:0 -8px 20px -12px rgba(23,26,33,.12);">
+              <button class="btn btn-primary btn-block" id="profileNext">Continue</button>
+            </div>
+          </section>
+
+          <!-- HOME (hub) -->
+          <section class="screen" data-name="home">
+            <div class="top-inset"></div>
+            <div class="home-header">
+              <div class="home-logo">
+                <svg width="26" height="26" viewBox="0 0 46 46" fill="none"><circle cx="23" cy="23" r="21" stroke="#7257D9" stroke-width="1.6"/><circle cx="23" cy="23" r="12" stroke="#7257D9" stroke-width="1.6" stroke-dasharray="2.2 4.5"/><circle cx="23" cy="23" r="3.2" fill="#7257D9"/></svg>
+                <b>PlayLens</b>
+              </div>
+              <div class="home-actions">
+                <button class="home-icon-btn" id="homeHelp" aria-label="How it works"><svg class="ic"><use href="#i-help"/></svg></button>
+                <button class="home-icon-btn" id="homeSettings" aria-label="Settings"><svg class="ic"><use href="#i-settings"/></svg></button>
+              </div>
+            </div>
+            <div class="home-scroll">
+              <div class="child-card" id="homeChildCard"></div>
+              <button class="home-scan-btn" id="homeScanBtn">
+                <span class="home-scan-icon"><svg class="ic ic-lg"><use href="#i-scan"/></svg></span>
+                <span class="home-scan-text"><b>Scan a playground</b><span>Point your phone and explore</span></span>
+                <span class="home-scan-arrow"><svg class="ic"><use href="#i-chevron"/></svg></span>
+              </button>
+              <div class="home-section-label"><svg class="ic ic-sm"><use href="#i-saved"/></svg> Saved playgrounds</div>
+              <div id="homeSavedList"></div>
+            </div>
+          </section>
+
+          <!-- BEFORE YOU SCAN -->
+          <section class="screen" data-name="before-scan">
+            <div class="scr-head">
+              <button class="icon-btn" data-go="home" aria-label="Back"><svg class="ic ic-sm"><use href="#i-back"/></svg></button>
+            </div>
+            <div class="pad" style="flex:1; overflow:auto;">
+              <p class="h-eyebrow">Ready to scan</p>
+              <h2 class="h2" style="font-size:25px;">Here's how it works</h2>
+              <div class="before-steps">
+                <div class="before-step"><span class="before-num">1</span><div><b>Find an area</b><p>Move around until something is in view.</p></div></div>
+                <div class="before-step"><span class="before-num">2</span><div><b>Hold steady</b><p>Point at a swing, climber or path.</p></div></div>
+                <div class="before-step"><span class="before-num">3</span><div><b>Scan it</b><p>PlayLens reads the space for a few seconds.</p></div></div>
+                <div class="before-step"><span class="before-num">4</span><div><b>See what it found</b><p>A short note, in relation to your child.</p></div></div>
+              </div>
+              <div class="privacy-note">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0; margin-top:1px;"><path d="M9 1.5L15.5 4v4.7c0 4-2.7 6.9-6.5 8.3-3.8-1.4-6.5-4.3-6.5-8.3V4L9 1.5z" stroke="#7257D9" stroke-width="1.3"/><path d="M6.3 9.1l1.9 1.9 3.5-3.9" stroke="#7257D9" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <p>The camera reads the space, not the people. Anyone who walks into view is never saved.</p>
+              </div>
+            </div>
+            <div class="pad" style="padding:14px 22px 26px; box-shadow:0 -8px 20px -12px rgba(23,26,33,.12);">
+              <button class="btn btn-accent btn-block" id="startScanBtn">Start scanning</button>
+            </div>
+          </section>
+
+          <!-- ROTATE CUE -->
+          <section class="screen" data-name="rotate">
+            <div class="rotate-wrap">
+              <div class="rotate-phone" aria-hidden="true">
+                <div class="rotate-phone-body"></div>
+                <svg class="rotate-arrow" width="56" height="56" viewBox="0 0 60 60" fill="none">
+                  <path d="M14 30a16 16 0 0 1 28-10" stroke="#7257D9" stroke-width="2.6" stroke-linecap="round"/>
+                  <path d="M42 12v9h-9" stroke="#7257D9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h2 class="h2" style="text-align:center; margin-top:34px;">Turn your phone sideways</h2>
+              <p class="body-text" style="text-align:center; max-width:250px;">Scanning works best in landscape, so you see more of the playground.</p>
+            </div>
+          </section>
+
+          <!-- AR / LIVE SCANNING (landscape) -->
+          <section class="screen" data-name="ar" id="arScreen">
+            <div class="ar-media">
+              <video id="clipA" muted playsinline preload="auto">
+                <source src="assets/clip-a.mp4" type="video/mp4">
+                <source src="assets/clip-a.webm" type="video/webm">
+              </video>
+              <video id="clipB" muted playsinline preload="auto">
+                <source src="assets/clip-b.mp4" type="video/mp4">
+                <source src="assets/clip-b.webm" type="video/webm">
+              </video>
+              <img class="ar-freeze" id="arFreeze" alt="" hidden>
+              <div class="ar-scrim-top"></div>
+              <div class="ar-scrim-bottom"></div>
+              <div class="ar-transition" id="arTransition" hidden>
+                <div class="ar-transition-inner">
+                  <svg class="ic" style="width:20px;height:20px;color:#fff"><use href="#i-explore"/></svg>
+                  <span id="arTransitionText">Moving to the next area</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="ar-topbar">
+              <div class="ar-brand">PlayLens</div>
+              <div class="ar-status" id="arStatus"><span class="dot"></span><span id="arStatusText">Looking for an area&hellip;</span></div>
+              <button class="btn btn-quiet btn-sm" id="arEndScan">End scan</button>
+            </div>
+
+            <svg class="ar-svg-layer" id="arSvgLayer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+            <div class="ar-footprint-layer" id="arFootprintLayer"></div>
+            <div class="ar-hotspot-layer" id="arHotspotLayer"></div>
+            <div class="ar-edge-layer" id="arEdgeLayer"></div>
+
+            <div class="ar-cue" id="arCue" hidden>
+              <svg class="ic" id="arCueIcon"><use href="#i-scan"/></svg>
+              <span id="arCueText">Tap the highlighted area</span>
+            </div>
+
+            <div class="ar-reticle" id="arReticle" hidden><div class="reticle-box"><div class="reticle-scanline"></div></div></div>
+
+            <div class="ar-toast ar-toast-reject" id="arRejectToast" hidden>
+              <span class="toast-x"><svg class="ic ic-sm" style="stroke-width:3"><use href="#i-close"/></svg></span>
+              <div><b>Not a playground feature</b><p>Try a fixed area like the swings or climber.</p></div>
+            </div>
+
+            <div class="ar-sheet ar-sheet-side" id="arMoveCloser" hidden>
+              <p class="sheet-title">Move a little closer</p>
+              <p class="sheet-text">Step closer so PlayLens can see this area clearly.</p>
+              <button class="btn btn-accent btn-block" id="arMoveCloserBtn">I've moved closer</button>
+            </div>
+
+            <div class="ar-sheet ar-sheet-side" id="arFocusPanel" hidden>
+              <p class="sheet-title" id="arFocusLabel">Hold steady on this area</p>
+              <button class="btn btn-accent btn-block" id="arScanBtn">Scan</button>
+              <button class="btn-textlink" id="arSkipBtn">Choose another area</button>
+            </div>
+
+            <div class="ar-scan-panel" id="arScanCopy" hidden></div>
+
+            <div class="ar-sheet ar-sheet-side" id="arProcessedPanel" hidden>
+              <div class="processed-row"><span class="processed-chip" id="arProcessedChip"></span></div>
+              <div class="processed-actions">
+                <button class="btn btn-ghost btn-sm" id="arViewDetail">Details</button>
+                <button class="btn btn-primary btn-sm" id="arScanNext">Next area</button>
+              </div>
+            </div>
+
+            <div class="ar-bottomnav" id="arBottomNav" hidden></div>
+
+            <div class="ar-modal-scrim" id="endScanScrim" hidden>
+              <div class="ar-modal">
+                <p class="sheet-title">Finish scanning?</p>
+                <p class="sheet-text">Everything you found stays on the playground map.</p>
+                <button class="btn btn-primary btn-block" id="endScanConfirm">Finish &amp; see results</button>
+                <button class="btn btn-ghost btn-block" id="endScanCancel" style="margin-top:8px;">Keep scanning</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- BLUEPRINT / MAP -->
+          <section class="screen" data-name="blueprint">
+            <div class="map-head">
+              <div class="map-head-row">
+                <button class="icon-btn" data-go="assessment" aria-label="Back"><svg class="ic ic-sm"><use href="#i-back"/></svg></button>
+                <div class="home-logo" style="gap:7px;"><svg width="20" height="20" viewBox="0 0 46 46" fill="none"><circle cx="23" cy="23" r="21" stroke="#7257D9" stroke-width="2"/><circle cx="23" cy="23" r="12" stroke="#7257D9" stroke-width="2" stroke-dasharray="2.2 4.5"/><circle cx="23" cy="23" r="3.2" fill="#7257D9"/></svg><b style="font-size:15px;">PlayLens</b></div>
+                <div style="flex:1"></div>
+              </div>
+              <h1 class="map-title">Your playground</h1>
+              <p class="map-subtitle" id="mapSubtitle">4 areas checked · updated today</p>
+            </div>
+            <div class="map-scroll">
+              <div class="blueprint-frame">
+                <svg id="blueprintSvg" viewBox="0 0 320 420" width="100%" height="100%"></svg>
+                <div id="zoneDesc"></div>
+              </div>
+              <div class="map-legend" id="blueprintLegend"></div>
+              <button class="map-stood-card" id="mapCard"></button>
+            </div>
+            <div class="ar-bottomnav" data-nav="reflect"></div>
+          </section>
+
+          <!-- ASSESSMENT -->
+          <section class="screen" data-name="assessment">
+            <div class="scr-head">
+              <button class="icon-btn" data-go="home" aria-label="Home"><svg class="ic ic-sm"><use href="#i-back"/></svg></button>
+              <p class="screen-title">What PlayLens found</p>
+            </div>
+            <div class="pad" style="flex:1; overflow:auto;" id="assessmentBody"></div>
+            <div class="ar-bottomnav" data-nav="reflect"></div>
+          </section>
+
+          <!-- SAVED -->
+          <section class="screen" data-name="saved">
+            <div class="scr-head">
+              <button class="icon-btn" data-go="home" aria-label="Home"><svg class="ic ic-sm"><use href="#i-back"/></svg></button>
+              <p class="screen-title">Saved</p>
+            </div>
+            <div class="pad" style="flex:1; overflow:auto;" id="savedBody"></div>
+            <div class="ar-bottomnav" data-nav="reflect"></div>
+          </section>
+
+          <!-- REPLAY -->
+          <section class="screen" data-name="replay">
+            <div class="scr-head">
+              <button class="icon-btn" data-go="saved" aria-label="Back"><svg class="ic ic-sm"><use href="#i-back"/></svg></button>
+              <p class="screen-title">Replay your scan</p>
+            </div>
+            <div class="replay-stage" id="replayStage">
+              <div class="replay-wire" id="replayWire"></div>
+              <div class="replay-badge" id="replayBadge"></div>
+            </div>
+            <div class="pad" style="padding:16px 22px 0;">
+              <div class="replay-scrub">
+                <button class="replay-play" id="replayPlayBtn" aria-label="Play"><svg class="ic ic-sm"><use href="#i-play"/></svg></button>
+                <div class="replay-track" id="replayTrack">
+                  <div class="replay-track-fill" id="replayTrackFill"></div>
+                  <div class="replay-playhead" id="replayPlayhead"></div>
+                </div>
+                <span class="replay-time" id="replayTime">0:00</span>
+              </div>
+            </div>
+            <div class="pad" style="flex:1; overflow:auto; padding-top:14px;">
+              <p class="replay-events-label">Scan events</p>
+              <div class="replay-events" id="replayTimeline"></div>
+            </div>
+          </section>
+
+          <!-- GLOBAL DETAIL SHEET (overlays any screen) -->
+          <div class="detail-overlay" id="detailSheet" hidden>
+            <div class="detail-scrim" id="detailScrim"></div>
+            <div class="detail-panel">
+              <div class="detail-scroll" id="detailContent"></div>
+            </div>
+          </div>
+
+          <!-- SETTINGS SHEET -->
+          <!-- RESCAN AREA PICKER -->
+          <div class="info-modal-scrim" id="rescanScrim" hidden>
+            <div class="info-modal" style="text-align:left; padding:22px;">
+              <h3 style="text-align:center;">Choose an area to rescan</h3>
+              <p style="text-align:center; margin-bottom:16px;">Pick which area you'd like to check again.</p>
+              <div id="rescanList" class="rescan-list"></div>
+              <button class="btn btn-ghost btn-block" id="rescanCancel" style="margin-top:6px;">Cancel</button>
+            </div>
+          </div>
+
+          <!-- INFO MODAL (in-app, replaces browser alert) -->
+          <div class="info-modal-scrim" id="infoScrim" hidden>
+            <div class="info-modal">
+              <div class="info-modal-icon"><svg class="ic"><use href="#i-help"/></svg></div>
+              <h3 id="infoTitle">How this works</h3>
+              <p id="infoBody"></p>
+              <button class="btn btn-primary btn-block" id="infoClose">Got it</button>
+            </div>
+          </div>
+
+          <div class="sheet-scrim" id="settingsScrim" hidden>
+            <div class="settings-sheet">
+              <div class="sheet-grabber"></div>
+              <h2 class="h2" style="font-size:20px; margin-bottom:4px;">Settings</h2>
+              <p class="small-text" style="margin-bottom:14px;">Manage your child's details and past scans.</p>
+              <div class="settings-row" id="setEditChild">
+                <svg class="ic"><use href="#i-child"/></svg>
+                <div class="settings-row-body"><b id="setChildName">Maya's profile</b><span>Age, needs, notes and tags</span></div>
+                <svg class="ic ic-sm chev"><use href="#i-chevron"/></svg>
+              </div>
+              <div class="settings-row" id="setOldScans">
+                <svg class="ic"><use href="#i-saved"/></svg>
+                <div class="settings-row-body"><b>Past scans</b><span id="setScanCount">See saved playgrounds</span></div>
+                <svg class="ic ic-sm chev"><use href="#i-chevron"/></svg>
+              </div>
+              <div class="settings-row" id="setHelp">
+                <svg class="ic"><use href="#i-help"/></svg>
+                <div class="settings-row-body"><b>How it works</b><span>Watch the intro again</span></div>
+                <svg class="ic ic-sm chev"><use href="#i-chevron"/></svg>
+              </div>
+
+              <p class="settings-section-label">Accessibility</p>
+              <div class="settings-row settings-row-toggle">
+                <svg class="ic"><use href="#i-moon"/></svg>
+                <div class="settings-row-body"><b>Dark mode</b><span>Easier on the eyes in low light</span></div>
+                <button class="toggle" id="toggleDark" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
+              </div>
+              <div class="settings-row settings-row-toggle">
+                <svg class="ic"><use href="#i-motion"/></svg>
+                <div class="settings-row-body"><b>Reduce motion</b><span>Calmer transitions and effects</span></div>
+                <button class="toggle" id="toggleMotion" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
+              </div>
+              <div class="settings-row settings-row-toggle">
+                <svg class="ic"><use href="#i-text"/></svg>
+                <div class="settings-row-body"><b>Larger text</b><span>Increase text size across the app</span></div>
+                <button class="toggle" id="toggleText" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
